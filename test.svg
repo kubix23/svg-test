@@ -1,0 +1,107 @@
+<svg version="1.1"
+     baseProfile="full"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 180 80">
+         <ellipse id="smile" cx="90" cy="40" rx="90" ry="40" fill="none" stroke-width="1" stroke="black"/>
+     
+     <path fill="none" stroke-width="0.1px" stroke="black" id="mou" d="M 0 0"/>
+     <path fill="none" stroke="#4400ff" id="linia" d="M 0 0"/>
+     <defs>
+         <style>
+             #smile:hover{
+                 fill: rgba(255, 0, 0, 0.5);
+             }
+         </style>
+         <script type="text/javascript">
+         <![CDATA[
+
+         function round(a){
+            return Math.round(a*10)/10
+         }
+
+             var elipse = document.getElementById("smile");
+
+             var a1 = parseInt(elipse.attributes.rx.value);
+             var b1 = parseInt(elipse.attributes.ry.value);
+             var xss = parseInt(elipse.attributes.cx.value);
+             var yss = parseInt(elipse.attributes.cy.value);
+            var mou = document.getElementById("mou")
+
+             document.addEventListener("mousemove",(thi) =>{
+             var pent = 0
+             var path = '' 
+             var mx = thi.x/(mou.parentElement.clientWidth/180)
+             var my = thi.y/(mou.parentElement.clientHeight/80)
+
+            var fy2 = Math.sqrt( (b1**2) - (   ((b1**2)/(a1**2))*(mx-xss)**2  )     ) +yss
+            var fx2 = mx
+
+            var table = []
+
+        function line(x2,y2,ap) {
+            pent++
+            var as = -((b1**2)*(x2-xss))   /    ((a1**2)*(y2-yss));
+            var as2 = as > 0 ? Math.atan(as) : Math.atan(as)+Math.PI
+            
+            var tg = isFinite(ap) ? (ap-as)/(1+ap*as)    : Math.tan((Math.PI/2)-as2)
+            
+            
+            
+            
+            var ao = Math.tan(as2-(Math.atan(tg)))
+
+
+
+
+
+
+
+
+            var kwa = {             
+                ak: (b1**2+(a1**2)*(ao**2)),
+                bk: (-(a1**2)*2*(ao**2)*x2-2*xss*(b1**2)+(a1**2)*2*ao*y2-(a1**2)*2*ao*yss),
+                ck: (xss**2)*(b1**2) + (a1**2)*(ao**2)*(x2**2) - (a1**2)*2*ao*x2*y2 + (a1**2)*2*ao*x2*yss + (a1**2)*(y2**2) - (a1**2)*2*y2*yss + (a1**2)*(yss**2) - (a1**2)*(b1**2),
+            
+                delta: function() {
+                    return (this.bk**2) - (4*this.ak*this.ck);
+                },
+
+                pierwiastek1: function() {
+                    return (- this.bk +  Math.sqrt(this.delta())  )/(2*this.ak);
+                },
+                pierwiastek2: function() {
+                    return (- this.bk -  Math.sqrt(this.delta())  )/(2*this.ak);
+                },
+            };
+
+            var x3 = round(x2) == round(kwa.pierwiastek1()) ? kwa.pierwiastek2() : kwa.pierwiastek1()
+            
+            var y3 = ao*(x3-x2)+y2
+
+            if(y2 == 80 && !isFinite(ao)){x3 = xss; y3 = 0}
+            if(y2 == 0 && !isFinite(ao)){x3 = xss; y3 = 80}
+            if(y2 == yss && isNaN(ao)){x3 = x2; y3 = y2}
+
+            path += ` ${x3} ${y3}`
+            
+            if(pent < 200){line(x3,y3,ao)}else{
+            }  
+            
+            document.getElementById("linia").setAttribute("d",`M ${mx} ${my} V ${y2}` )
+            mou.setAttribute("d", `M ${mx} ${my} V ${y2} L${path}`)
+
+        }
+
+
+
+
+
+
+
+            line(fx2,fy2,Infinity)
+
+            })
+        ]]>
+         </script>
+     </defs>
+</svg>
